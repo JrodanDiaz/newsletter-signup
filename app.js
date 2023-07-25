@@ -1,14 +1,9 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const https = require("https");
 app.use(bodyParser.urlencoded({extended: true}));
-//==================================================================
-//ce1c484c488dff1f2e47496fb5c13ddb-us21
-
-//Heaven's Door
-//e963c6908309338e8c78923027f37bb5-us21
-//List / Audience ID : 378eeb6e0e
+const https = require("https");
+require('dotenv').config();
 
 app.use(express.static("Public"));
 
@@ -23,9 +18,7 @@ app.post("/", function(req, res){
     var firstName = req.body.firstName;
     var lastName = req.body.lastName;
     var emailAddress = req.body.emailAddress;
-    console.log(firstName);
-    console.log(lastName);
-    console.log(emailAddress);
+    
 
 
     //Then, convert this data into a JSON that is readable by the API you're using
@@ -46,15 +39,14 @@ app.post("/", function(req, res){
 
     //Then, send this JSON to the API
 
-    const url = "https://us21.api.mailchimp.com/3.0/lists/378eeb6e0e";
+    const url = "https://us21.api.mailchimp.com/3.0/lists/" + process.env.AUDIENCE_ID;
     const options = {
         method: "POST",
-        auth: "jordan1:e963c6908309338e8c78923027f37bb5-us21"
+        auth: "" + process.env.API_KEY
     };
 
     const request = https.request(url, options, function(response){
         response.on("data", function(data){
-            console.log("Data went through?");
             if (response.statusCode === 200){
                 res.sendFile(__dirname + "/success.html");
             } else {
